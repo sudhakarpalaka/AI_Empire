@@ -1,0 +1,18 @@
+{
+    "system_name": "AI Empire Autonomous Media System",
+    "core_policy": "0% Mistake Policy, Safe Teaching, Zero Forceful Claims",
+    "channels": [
+        {
+            "channel_id": "UC_REPAIR_001_ELECTRONICS",
+            "channel_name": "Electronics & Appliance Repair",
+            "topic": "Home Electronics, Appliances Self-Repair & Teaching",
+            "status": "Active",
+            "approval_required": true
+        }
+    ],
+    "telegram_bot": {
+        "status": "Active",
+        "bot_token": "8675036499:AAEs0zOmgYGPy5j4SAAjgi57q1I0brq7iUk",
+        "chat_id": "7741182250"
+    }
+}
