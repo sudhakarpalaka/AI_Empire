@@ -5,7 +5,7 @@ import replicate
 from gtts import gTTS
 from moviepy import AudioFileClip, VideoFileClip, concatenate_videoclips
 
-# 1. Apni Replicate API Key set karein
+# DIRECT TOKEN SETTLED HERE TO FIX 401 ERROR
 os.environ["REPLICATE_API_TOKEN"] = "r8_UiPiWod3Ks7Aws6bkbH9EqbVS7lKWIq402hL2"
 
 print("--------------------------------------------------")
@@ -16,7 +16,6 @@ output_dir = "empire_masterclass_output"
 os.makedirs(output_dir, exist_ok=True)
 final_master_video = os.path.join(output_dir, "ai_empire_masterclass_full.mp4")
 
-# 2. Detailed Multi-Scene Masterclass Script
 scenes = [
     {
         "id": 1,
@@ -45,13 +44,11 @@ video_clips = []
 for scene in scenes:
     print(f"\n[INFO] Processing Scene 0{scene['id']} / 04...")
     
-    # Generate Voiceover for this scene
     scene_audio_path = os.path.join(output_dir, f"scene_{scene['id']}_audio.mp3")
     tts = gTTS(text=scene['script'], lang='en', slow=False)
     tts.save(scene_audio_path)
     scene_audio = AudioFileClip(scene_audio_path)
     
-    # Generate AI Cinematic Video Clip for this scene via Replicate
     print(f"[AI AGENT] Generating 3D video clip for Scene {scene['id']}...")
     try:
         prediction = replicate.predictions.create(
@@ -71,15 +68,12 @@ for scene in scenes:
             if isinstance(output_url, list):
                 output_url = output_url[0]
                 
-            # Download clip
             clip_path = os.path.join(output_dir, f"scene_{scene['id']}_video.mp4")
             vid_data = requests.get(output_url).content
             with open(clip_path, "wb") as f:
                 f.write(vid_data)
                 
-            # Combine audio and video for this scene
             v_clip = VideoFileClip(clip_path)
-            # Match video duration to audio duration loop/trim if necessary
             v_clip = v_clip.with_audio(scene_audio)
             scene_final_path = os.path.join(output_dir, f"scene_{scene['id']}_final.mp4")
             v_clip.write_videofile(scene_final_path, fps=24, codec='libx264', audio_codec='aac', logger=None)
@@ -92,7 +86,6 @@ for scene in scenes:
     except Exception as e:
         print(f"[ERROR] Exception in scene {scene['id']}: {e}")
 
-# 3. Concatenate all scenes into one Big Masterclass Video
 if video_clips:
     print("\n[INFO] Stitching all scenes together into a grand Masterclass video...")
     master_video = concatenate_videoclips(video_clips)
@@ -103,7 +96,6 @@ if video_clips:
     print(f" -> Master Video Saved At: {final_master_video}")
     print(f"--------------------------------------------------")
     
-    # Automatically download to computer
     from google.colab import files
     files.download(final_master_video)
 else:
