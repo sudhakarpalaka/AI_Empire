@@ -3,10 +3,12 @@ import time
 import requests
 import replicate
 from gtts import gTTS
+from moviepy import AudioFileClient if 'AudioFileClient' in globals() else object
 from moviepy import AudioFileClip, VideoFileClip, concatenate_videoclips
 
-# DIRECT TOKEN SETTLED HERE TO FIX 401 ERROR
+# EXPLICITLY INITIALIZING REPLICATE CLIENT WITH API TOKEN
 os.environ["REPLICATE_API_TOKEN"] = "r8_UiPiWod3Ks7Aws6bkbH9EqbVS7lKWIq402hL2"
+client = replicate.Client(api_token="r8_UiPiWod3Ks7Aws6bkbH9EqbVS7lKWIq402hL2")
 
 print("--------------------------------------------------")
 print("   🚀 AI EMPIRE: BADA LEVEL SCALE-UP STUDIO ENGINE  ")
@@ -51,7 +53,8 @@ for scene in scenes:
     
     print(f"[AI AGENT] Generating 3D video clip for Scene {scene['id']}...")
     try:
-        prediction = replicate.predictions.create(
+        # Using client.predictions.create with explicit token authentication
+        prediction = client.predictions.create(
             model="minimax/video-01",
             input={
                 "prompt": scene['prompt'],
@@ -81,7 +84,7 @@ for scene in scenes:
             video_clips.append(VideoFileClip(scene_final_path))
             print(f"[SUCCESS] Scene {scene['id']} rendered successfully!")
         else:
-            print(f"[ERROR] Scene {scene['id']} AI generation failed.")
+            print(f"[ERROR] Scene {scene['id']} AI generation failed with status: {prediction.status}")
             
     except Exception as e:
         print(f"[ERROR] Exception in scene {scene['id']}: {e}")
